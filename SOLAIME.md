@@ -11,11 +11,13 @@ schema. Pour suivre les versions amont :
 
 Licence MIT, comme le depot d'origine.
 
-Base de donnees. L'agenda partage l'instance Neon avec le relais, mais pas le
-schema : le relais occupe public, l'agenda occupe calcom. Sans cette
-separation, prisma migrate deploy refuse de s'installer dans un schema qu'il
-ne gere pas, et la construction echoue apres avoir lu ses 595 migrations.
+Base de donnees. L'agenda a sa PROPRE base sur l'instance Neon, nommee
+calcom, et le relais garde neondb. Un simple schema separe ne suffit pas :
+la migration 20250505135207_create_booking_time_status_denormalized ecrit
+public."BookingDenormalized" en dur, et echoue avec 42P01 des que le schema
+n'est pas public. Les migrations de cal supposent public, il leur faut donc
+une base a elles.
 
-Les URL portent aussi sslmode=require sans channel_binding, que le moteur de
+Les URL portent sslmode=require sans channel_binding, que le moteur de
 migration de Prisma ne sait pas negocier, et pgbouncer=true sur la connexion
 poolee.
