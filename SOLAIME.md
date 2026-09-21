@@ -11,7 +11,11 @@ schema. Pour suivre les versions amont :
 
 Licence MIT, comme le depot d'origine.
 
-Note sur la base : les URL fournies par Neon portent channel_binding=require,
-que le moteur de migration de Prisma ne gere pas. Les variables DATABASE_URL
-et DATABASE_DIRECT_URL du projet Vercel sont donc posees a la main, sans ce
-parametre, avec pgbouncer=true sur la connexion poolee.
+Base de donnees. L'agenda partage l'instance Neon avec le relais, mais pas le
+schema : le relais occupe public, l'agenda occupe calcom. Sans cette
+separation, prisma migrate deploy refuse de s'installer dans un schema qu'il
+ne gere pas, et la construction echoue apres avoir lu ses 595 migrations.
+
+Les URL portent aussi sslmode=require sans channel_binding, que le moteur de
+migration de Prisma ne sait pas negocier, et pgbouncer=true sur la connexion
+poolee.
