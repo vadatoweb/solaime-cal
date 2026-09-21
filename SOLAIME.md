@@ -11,6 +11,7 @@ schema. Pour suivre les versions amont :
 
 Licence MIT, comme le depot d'origine.
 
-Deuxieme passage : le cache distant de Turborepo garde les taches deja
-construites au tour precedent, qui s'est arrete sur la limite de 45 minutes
-de Vercel.
+Note sur la base : les URL fournies par Neon portent channel_binding=require,
+que le moteur de migration de Prisma ne gere pas. Les variables DATABASE_URL
+et DATABASE_DIRECT_URL du projet Vercel sont donc posees a la main, sans ce
+parametre, avec pgbouncer=true sur la connexion poolee.
