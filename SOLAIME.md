@@ -10,3 +10,7 @@ schema. Pour suivre les versions amont :
 `git fetch upstream && git merge upstream/main`.
 
 Licence MIT, comme le depot d'origine.
+
+Deuxieme passage : le cache distant de Turborepo garde les taches deja
+construites au tour precedent, qui s'est arrete sur la limite de 45 minutes
+de Vercel.
