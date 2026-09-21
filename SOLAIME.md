@@ -11,13 +11,16 @@ schema. Pour suivre les versions amont :
 
 Licence MIT, comme le depot d'origine.
 
-Base de donnees. L'agenda a sa PROPRE base sur l'instance Neon, nommee
-calcom, et le relais garde neondb. Un simple schema separe ne suffit pas :
-la migration 20250505135207_create_booking_time_status_denormalized ecrit
-public."BookingDenormalized" en dur, et echoue avec 42P01 des que le schema
-n'est pas public. Les migrations de cal supposent public, il leur faut donc
-une base a elles.
+Base de donnees. L'agenda a sa propre base sur l'instance Neon, nommee
+calcom ; le relais garde neondb. Un schema separe ne suffit pas : la
+migration 20250505135207 ecrit public."BookingDenormalized" en dur et echoue
+en 42P01 des que le schema n'est pas public.
+
+Les 595 migrations ont ete appliquees UNE FOIS depuis un poste, avec
+prisma migrate deploy, parce que les appliquer a froid pendant la
+construction depasse la limite de 45 minutes de Vercel. Les constructions
+suivantes n'ont plus rien a appliquer et tiennent en quelques minutes.
 
 Les URL portent sslmode=require sans channel_binding, que le moteur de
-migration de Prisma ne sait pas negocier, et pgbouncer=true sur la connexion
-poolee.
+migration de Prisma ne sait pas negocier, et pgbouncer=true sur la
+connexion poolee.
