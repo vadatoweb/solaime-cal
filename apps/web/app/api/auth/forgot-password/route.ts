@@ -7,7 +7,7 @@ import prisma from "@calcom/prisma";
 import { defaultResponderForAppDir } from "app/api/defaultResponderForAppDir";
 import { parseRequestData } from "app/api/parseRequestData";
 import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 async function handler(req: NextRequest) {
   const body = await parseRequestData(req);
@@ -30,7 +30,14 @@ async function handler(req: NextRequest) {
       select: { name: true, email: true, locale: true },
     });
     // Don't leak info about whether the user exists
-    if (user) passwordResetRequest(user).catch(console.error);
+    //
+    // Solaime, 5 octobre 2026. L'appel d'origine n'etait pas attendu : sur un
+    // serveur qui dure, il finit apres la reponse. Sur Vercel, la fonction est
+    // gelee des la reponse rendue, la demande n'est jamais ecrite en base et le
+    // courriel ne part jamais, alors que l'interface affiche « email envoye ».
+    // after() garde la fonction en vie jusqu'au bout du travail, sans rallonger
+    // la reponse, donc sans trahir par sa duree l'existence d'un compte.
+    if (user) after(() => passwordResetRequest(user).catch(console.error));
     return NextResponse.json({ message: "password_reset_email_sent" }, { status: 201 });
   } catch (reason) {
     console.error(reason);
